@@ -85,7 +85,7 @@ Pick the recipe for the package's source shape:
 | Tagged GitHub release, `rev = "v${version}"` | ez80asm, romarr, herdr-* (tagged) | Edit `version`; `hash` from `nix flake prefetch --json github:<owner>/<repo>/<tag> \| jq -r .hash` |
 | Untagged commit | agon-compression, herdr-worktreeinclude-local | Edit `rev`, `hash`, and the `<x>-unstable-<YYYY-MM-DD>` date in `version` (commit date) |
 | `fetchurl` of a release file | foot-terminfo, agentrun (Node tarball) | `nix store prefetch-file --json <url> \| jq -r .hash` |
-| Rolling binary assets | ai-beacon | Follow the command in its header comment. Assets are replaced in place, so hashes can break with no version change |
+| Rolling binary assets | ai-beacon | Follow the command in its header comment. Assets are replaced in place, so hashes can break with no version change. CI skips it (`preferLocalBuild`), so only a local build shows a broken hash: always build it |
 | Per-platform split | fab-agon-emulator | Linux builds from source (`fetchSubmodules = true`, plus `cargoHash`); darwin fetches a prebuilt zip with its own `hash`. Bump both |
 
 Then refresh the language dependency hash if its lockfile changed:

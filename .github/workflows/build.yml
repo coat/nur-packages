@@ -14,6 +14,8 @@ on:
 jobs:
   tests:
     strategy:
+      # Report every nixpkgs version, even when one fails.
+      fail-fast: false
       matrix:
         # Set this to notify the global nur package registry that changes are
         # available.
