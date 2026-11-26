@@ -5,19 +5,21 @@
   makeWrapper,
   python3,
   libarchive,
+  rclone,
+  util-linux,
   unar,
   _7zz-rar,
   withUnfreeRar ? false,
 }:
 stdenv.mkDerivation rec {
   pname = "romarr";
-  version = "1.12.0";
+  version = "1.13.2";
 
   src = fetchFromGitHub {
     owner = "BlizzHacker";
     repo = "romarr";
     rev = "v${version}";
-    hash = "sha256-clFCA99p+fiq2GH/KvStNavP1BOl/BP6ylBVNdoX+1g=";
+    hash = "sha256-L6cMfeJYLAs8zcECpWL5GcvvK+AcfZ3JUN5hPyrl4hw=";
   };
 
   nativeBuildInputs = [makeWrapper];
@@ -45,11 +47,19 @@ stdenv.mkDerivation rec {
     # not the decoders; `_7zz-rar` (unfree unRAR licence) has them, matching
     # the official 7-Zip build the upstream Dockerfile installs. unar (LGPL)
     # is what upstream's browser image ships.
+    #
+    # Cloud storage (romarr/cloud_rclone.py) runs `rclone` from
+    # $ROMARR_RCLONE or PATH, under `setpriv --pdeathsig TERM` (util-linux)
+    # when that is on PATH, as the upstream Dockerfile installs both. Mounting
+    # also needs `fusermount3`, which only works setuid, so that one comes from
+    # the system PATH (/run/wrappers/bin on NixOS).
     makeWrapper "${py}/bin/python" "$out/bin/romarr" \
       --set PYTHONPATH "$out/lib:${py}/${python3.sitePackages}" \
       --set PYTHONDONTWRITEBYTECODE 1 \
       --prefix PATH : "${lib.makeBinPath [
       libarchive
+      rclone
+      util-linux
       (
         if withUnfreeRar
         then _7zz-rar

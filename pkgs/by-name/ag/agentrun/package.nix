@@ -29,13 +29,13 @@
       }
     else nodejs_24;
 
-  version = "0.1.0-beta.52";
+  version = "0.1.0-beta.63";
 
   src = fetchFromGitHub {
     owner = "Parcha-ai";
     repo = "agentrun";
     rev = "v${version}";
-    hash = "sha256-OuL97bLgW0nsM3PSxdCaQTjCQfpiOYIRdOqPDo7TDPo=";
+    hash = "sha256-Xd3efGUPtMTQ/hjjeX8Z5Otbro5Ofaaco2HNX/g23MM=";
   };
 
   # The console (apps/console) is outside the npm workspaces, with its own
@@ -50,7 +50,7 @@ in
     pname = "agentrun";
     inherit version src nodejs;
 
-    npmDepsHash = "sha256-Wc+onKqCZd026I925gvTMz0SEsEzIoWH80YthNX2wGc=";
+    npmDepsHash = "sha256-9rBPtCkYmRVmxtkbs4U+1u3yU8lcyT5BI1wzMLuxHSo=";
 
     # Upstream's image installs with `npm ci --ignore-scripts`; no package's
     # install script is part of the supported build.
