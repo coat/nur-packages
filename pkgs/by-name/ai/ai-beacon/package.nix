@@ -9,10 +9,10 @@
   #   gh api repos/manusa/ai-beacon/releases --jq '.[].assets[] | .name+" "+.digest'
   # and `ai-beacon version` on the new binary.
   hashes = {
-    x86_64-linux = "sha256-OREETI4b+EMciSZRRDqFaJOGSVusxXgACglPWw/G4ig=";
-    aarch64-linux = "sha256-3mOW0Jdku2UDQwRxKljeVfBJxwHon0wgoNGk1uT5pr4=";
-    x86_64-darwin = "sha256-xH56GXpWB8vlweA1ucP3f3HvWqajtfaTiNAq8eKhKjs=";
-    aarch64-darwin = "sha256-se3epbX7NxT9f0HAT96GGAIoMoiGQIuuJpxPn0Hv+1s=";
+    x86_64-linux = "sha256-6ZlUQiXRDTOhqEirnlkKmu2oDpjiwmpBnZZz2K6Nuno=";
+    aarch64-linux = "sha256-M/2KZj4MIws4YajzezqsTqFrmSYNnuVoZQyxrqZUqnY=";
+    x86_64-darwin = "sha256-CEcoyBX+THN1g8A6d49J7eOqv+WL4UHk9+y3XabAROI=";
+    aarch64-darwin = "sha256-e6d75gRANATWnjLe4G+KpFhnwF7RypJgoyU64htBuF8=";
   };
   platform = stdenvNoCC.hostPlatform;
   goos = platform.parsed.kernel.name;
@@ -23,7 +23,7 @@
 in
   stdenvNoCC.mkDerivation {
     pname = "ai-beacon";
-    version = "0.0.0-snapshot.20261123081119";
+    version = "0.0.0-snapshot.20261126163312";
 
     src = fetchurl {
       url = "https://github.com/manusa/ai-beacon/releases/download/snapshot/ai-beacon-${goos}-${goarch}";
@@ -31,6 +31,11 @@ in
     };
 
     dontUnpack = true;
+
+    # Only a download and a copy, so there is nothing worth caching. ci.nix
+    # also skips preferLocalBuild packages, which keeps the scheduled CI run
+    # from failing every time upstream replaces the snapshot assets.
+    preferLocalBuild = true;
 
     # Go binaries: static on Linux, only system frameworks on darwin.
     installPhase = ''
